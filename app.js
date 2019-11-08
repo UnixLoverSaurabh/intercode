@@ -1,47 +1,41 @@
+var createError = require('http-errors');
 var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+
 var app = express();
 
-var message = [
-    {
-        id: 1,
-        name: "saurabh",
-        read: false
-    },
-    {
-        id: 2,
-        name: "sunil",
-        read: true
-    },
-    {
-        id: 3,
-        name: "mojo",
-        read: false
-    }
-];
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
 
-app.get('/', function (req, res) {
-    res.send('Message from app.js');
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
 });
 
-app.get('/messages/:id', function (req, res) {
-   var id = parseInt(req.params.id, 10);
-   var flag = false;
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-   for(var i = 0 ; i < message.length ; i++) {
-       if(message[i].id === id) {
-           res.json(message[i]);
-           flag = true;
-           break;
-       }
-   }
-
-   if(!flag) {
-       res.send("Can not find any message with this ID...");
-   }
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
 });
 
-// app.listen(3000);
-app.listen(3000, function () {
-    var port = 3000;
-   console.log('Server running on port ' + port + 'http://localhost:3000');
-});
+module.exports = app;
