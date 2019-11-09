@@ -33,6 +33,9 @@
     </div>
 </div>
 
+<!--roomId is coming from routes/task.js-->
+<input type="hidden" value="{{roomId}}" id="roomId">
+
 <!--Code Editor ---- https://cdnjs.com/libraries/codemirror -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/javascript/javascript.min.js"></script>
@@ -52,7 +55,10 @@
         username = "User" + userId;
         $("#chatbox-username").text(username);
     }
-    ;
+
+    // element having id as roomId and get value of that
+    var roomId = $('#roomId').val();
+    socket.emit('joinRoom', {room: roomId});
 
     var userMessage = function (name, text) {
         return ('<li class="media"> <div class="media-body"> <div class="media">' +
