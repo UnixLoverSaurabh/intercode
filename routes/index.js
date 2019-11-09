@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
+var nodemailer = require('nodemailer');
+var config = require('../config');
+var transporter = nodemailer.createTransport(config.mailer);
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('index', {title: 'InterCode'});
@@ -30,8 +34,20 @@ router.route('/contact').get(function (req, res, next) {
             errorMessages: errors
         });
     } else {
-        // Redirect to thank.hbs after submitting contact form
-        res.render('thank', {title: 'InterCode'});
+        // Send mail
+        var mailOptions = {
+            from: 'InterCode <no-reply@intercode.com>',
+            to: 'suhas.dakshana16@gmail.com',
+            subject: 'New message from interviewer',
+            text: req.body.message
+        };
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                return console.log(error);
+            }
+            // Redirect to thank.hbs after submitting contact form
+            res.render('thank', {title: 'InterCode'});
+        })
     }
 });
 
