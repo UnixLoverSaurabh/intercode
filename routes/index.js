@@ -15,14 +15,6 @@ router.get('/about', function (req, res, next) {
     res.render('about', {title: 'InterCode'});
 });
 
-/* GET Login and register page. */
-router.get('/login', function (req, res, next) {
-    res.render('login', {title: 'InterCode'});
-});
-router.get('/register', function (req, res, next) {
-    res.render('register', {title: 'InterCode'});
-});
-
 /* Post contact page. */
 router.route('/contact').get(function (req, res, next) {
     res.render('contact', {title: 'InterCode'});
