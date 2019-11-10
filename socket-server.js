@@ -1,23 +1,34 @@
 'use strict';
 
 var socketIO = require('socket.io');
+var ot = require('ot');
+var roomList = {};
 
-module.exports = function (server) {
+module.exports = function(server) {
+    var str = 'This is a Markdown heading \n\n' +
+        'var i = i + 1;';
+
     var io = socketIO(server);
+    io.on('connection', function(socket) {
+        socket.on('joinRoom', function(data) {
+            if (!roomList[data.room]) {
+                var socketIOServer = new ot.EditorSocketIOServer(str, [], data.room, function(socket, cb) {
+                    cb(true);
+                });
+                roomList[data.room] = socketIOServer;
+            }
+            roomList[data.room].addClient(socket);
+            roomList[data.room].setName(socket, data.username);
 
-    // Chat room for only for user with same url
-    io.on('connection', function (socket) {
-        socket.on('joinRoom', function (data) {
-            // Dynamic property of socket that we can name whatever may be socket.saurabh
             socket.room = data.room;
             socket.join(data.room);
         });
 
-        socket.on('chatMessage', function (data) {
+        socket.on('chatMessage', function(data) {
             io.to(socket.room).emit('chatMessage', data);
         });
 
-        socket.on('disconnect', function () {
+        socket.on('disconnect', function() {
             socket.leave(socket.room);
         });
     })
