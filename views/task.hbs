@@ -1,7 +1,8 @@
 <div>
     <div class="row">
         <div class="col-md-8">
-            <textarea id="code-screen"></textarea>
+            <!-- Display the initial content of code editor from database-->
+            <textarea id="code-screen">{{content}}</textarea>
         </div>
         <div class="col-md-4" id="chatbox">
             <div class="panel panel-primary">
@@ -54,15 +55,24 @@
         theme: "monokai"
     });
 
+    // Get the value from element having id code-screen
+    var code = $('#code-screen').val();
+
     var cmClient;
+
     function init(str, revision, clients, serverAdapter) {
-        editor.setValue(str);
+
+        // If there is no data of code editor in database it will display str variable
+        if (!code) {
+            editor.setValue(str);
+        }
+
         cmClient = window.cmClient = new EditorClient(
                 revision, clients, serverAdapter, new CodeMirrorAdapter(editor)
         );
     }
 
-    socket.on('doc', function(obj) {
+    socket.on('doc', function (obj) {
         init(obj.str, obj.revision, obj.clients, new SocketIOAdapter(socket));
     });
 
