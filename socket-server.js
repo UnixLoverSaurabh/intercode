@@ -7,8 +7,7 @@ var ot = require('ot');
 var roomList = {};
 
 module.exports = function (server) {
-    var str = 'This is a Markdown heading \n\n' +
-        'var i = i + 1;';
+    var str = 'console.log("InterCode is working");';
 
     var io = socketIO(server);
 

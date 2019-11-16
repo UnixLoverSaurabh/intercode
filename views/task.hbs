@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-8">
             <!-- Display the initial content of code editor from database-->
-            <textarea id="code-screen">{{content}}</textarea>
+            <textarea id="codeScreen">{{content}}</textarea>
             <span class="input-group-btn">
               <button type="button" class="btn btn-primary" onclick="submitCode()">Run Code</button>
             </span>
@@ -77,14 +77,14 @@
     var SocketIOAdapter = ot.SocketIOAdapter;
     var CodeMirrorAdapter = ot.CodeMirrorAdapter;
 
-    var socket = io.connect('http://localhost:3000');
-    var editor = CodeMirror.fromTextArea(document.getElementById("code-screen"), {
+    var socket = io.connect('http://192.168.1.102:3000');
+    var editor = CodeMirror.fromTextArea(document.getElementById("codeScreen"), {
         lineNumbers: true,
         theme: "monokai"
     });
 
     // Get the value from element having id code-screen
-    var code = $('#code-screen').val();
+    var code = $('#codeScreen').val();
 
     var cmClient;
 
@@ -125,11 +125,11 @@
     };
 
     var submitCode = function () {
-        var editorCode = $('#code-screen').val();
+        var editorCode = editor.getValue();
         console.log("Editor code is : " + editorCode);
         socket.emit('editorMessage', {message: editorCode, username: username});
 
-        $('#compiler-output').val("submitCode function is working properly");
+        $('#compiler-output').text("submitCode function is working properly");
     };
 
     // Display the code output below the code editor, received from socket-server.js
