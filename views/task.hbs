@@ -3,7 +3,14 @@
         <div class="col-md-8">
             <!-- Display the initial content of code editor from database-->
             <textarea id="code-screen">{{content}}</textarea>
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-primary" onclick="submitCode()">Run Code</button>
+            </span>
         </div>
+        <div class="col-md-8 container">
+            <span id="compiler-output">Run code to see the output</span>
+        </div>
+
         <div class="col-md-4" id="chatbox">
             <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -23,8 +30,8 @@
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Enter message" id="userMessage"/>
                         <span class="input-group-btn">
-              <button type="button" class="btn btn-primary" onclick="sendMessage()">SEND</button>
-            </span>
+                          <button type="button" class="btn btn-primary" onclick="sendMessage()">SEND</button>
+                        </span>
                     </div>
 
                     <form action="fileupload" method="post" enctype="multipart/form-data">
@@ -50,7 +57,22 @@
 <script src="/plugins/ot/ot.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 
+
 <script>
+    $('#submit').click(function () {
+        $.ajax({
+            url: '/fileupload',
+            type: 'POST',
+            data:
+                    {
+                        filetoupload: filetoupload,
+                    },
+            success: function (msg) {
+                alert('File Sent');
+            }
+        });
+    });
+
     var EditorClient = ot.EditorClient;
     var SocketIOAdapter = ot.SocketIOAdapter;
     var CodeMirrorAdapter = ot.CodeMirrorAdapter;
@@ -92,6 +114,7 @@
     // element having id as roomId and get value of that
     var roomId = $('#roomId').val();
     socket.emit('joinRoom', {room: roomId, username: username});
+    console.log("Username is : " + username);
 
     var userMessage = function (name, text) {
         return ('<li class="media"> <div class="media-body"> <div class="media">' +
@@ -101,6 +124,21 @@
         );
     };
 
+    var submitCode = function () {
+        var editorCode = $('#code-screen').val();
+        console.log("Editor code is : " + editorCode);
+        socket.emit('editorMessage', {message: editorCode, username: username});
+
+        $('#compiler-output').val("submitCode function is working properly");
+    };
+
+    // Display the code output below the code editor, received from socket-server.js
+    socket.on('editorMessage', function (data) {
+        $('#compiler-output').text(data);
+    });
+
+
+    // Send the user chat message to chatMessage function in socket-server.js
     var sendMessage = function () {
         var userMessage = $('#userMessage').val();
         socket.emit('chatMessage', {message: userMessage, username: username});

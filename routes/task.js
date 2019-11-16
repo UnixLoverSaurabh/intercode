@@ -26,6 +26,7 @@ router.get('/task/:id', function (req, res) {
             }
 
             if (data) {
+                // console.log(data.content + "        " + data.id);
                 res.render('task', {content: data.content, roomId: data.id});
             } else {
                 res.render('error');
@@ -45,7 +46,7 @@ router.post('/task/fileupload', function (req, res, next) {
         fs.rename(oldpath, newpath, function (err) {
             if (err) throw err;
             res.write('File uploaded and moved!');
-            res.end();
+            res.end(" File end");
         });
     });
 });
