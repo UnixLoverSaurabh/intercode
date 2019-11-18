@@ -1,8 +1,16 @@
 const express = require('express');
 const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
 const port = process.env.PORT || 9000;
+
+const fs = require('fs');
+const path = require('path');
+const httpsOptions = {
+    cert: fs.readFileSync(path.join(__dirname, 'ssl', 'server.crt')),
+    key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key'))
+}
+const https = require('https').Server(httpsOptions, app);
+const io = require('socket.io')(https);
+
 
 app.use(express.static(__dirname + "/public"));
 let clients = 0;
@@ -39,7 +47,9 @@ function SendAnswer(data) {
     this.broadcast.emit("BackAnswer", data)
 }
 
-http.listen(port, () => console.log(`Active on ${port} port`));
+
+
+https.listen(port, () => console.log(`Active on ${port} port`));
 
 
 
