@@ -1,2 +1,1 @@
-console.log("InterCode is workinefdiuh rewfjn rfg refoijvksaeroi ojkgbg");
-
+console.log("jhkswdf skdufhv ")

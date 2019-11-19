@@ -72,7 +72,15 @@ module.exports = function (server) {
                 });
 
                 // Now execute the saved file
-                const child = exec('node test.js', (error, stdout, stderr) => {
+                const child = exec('g++ test.cpp', (error, stdout, stderr) => {
+                    console.log(`stdout: ${stdout}`);
+                    console.log(`stderr: ${stderr}`);
+                    if (error !== null) {
+                        console.log(`exec error: ${error}`);
+                    }
+                });
+                // Now execute the saved file
+                const child1 = exec('a.exe', (error, stdout, stderr) => {
                     console.log(`stdout: ${stdout}`);
                     console.log(`stderr: ${stderr}`);
                     if (error !== null) {
