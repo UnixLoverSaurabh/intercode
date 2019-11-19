@@ -1,0 +1,1 @@
+console.log("InterCode is woasas rk sss as ing");

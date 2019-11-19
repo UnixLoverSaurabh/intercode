@@ -3,6 +3,10 @@
         <div class="col-md-8">
             <!-- Display the initial content of code editor from database-->
             <textarea id="codeScreen">{{content}}</textarea>
+            <select id="dropDownId">
+                <option value="cpp">CPP</option>
+                <option value="nodeJS">nodeJS</option>
+            </select>
             <span class="input-group-btn">
               <button type="button" class="btn btn-primary" onclick="submitCode()">Run Code</button>
             </span>
@@ -80,7 +84,8 @@
     var SocketIOAdapter = ot.SocketIOAdapter;
     var CodeMirrorAdapter = ot.CodeMirrorAdapter;
 
-    var socket = io.connect('https://192.168.0.101:3000');
+    var socket = io.connect('https://192.168.43.212:3000');
+    //var socket = io.connect('https://localhost:3000');
     var editor = CodeMirror.fromTextArea(document.getElementById("codeScreen"), {
         lineNumbers: true,
         theme: "monokai"
@@ -129,10 +134,9 @@
 
     var submitCode = function () {
         var editorCode = editor.getValue();
-        console.log("Editor code is : " + editorCode);
-        socket.emit('editorMessage', {message: editorCode, username: username});
-
-        $('#compiler-output').text("submitCode function is working properly");
+        var lang = $('#dropDownId').val();
+        console.log("Editor code is : " + editorCode + " and lang : " + lang);
+        socket.emit('editorMessage', {message: editorCode, lang: lang, username: username});
     };
 
     // Display the code output below the code editor, received from socket-server.js
