@@ -13,7 +13,7 @@
             <div class="panel panel-primary">
                 <!-- VIDEO CALL -->
                 <div id="video-container">
-                    <iframe src="https://192.168.43.212:9000/" width="100%" height=1000px" scrolling="no" allow="camera;microphone">
+                    <iframe src="https://192.168.0.101:9000/" width="100%" height=1000px" scrolling="no" allow="camera;microphone">
 
                         <p>frames are not supported by ur browser</p>
                     </iframe>
@@ -28,7 +28,6 @@
                 </div>
                 <div class="panel-body">
                     <ul class="media-list" style="heigh: 300px; overflow-y: scroll" id="chatbox-listMessages">
-
                     </ul>
                 </div>
                 <div class="panel-footer">
@@ -38,7 +37,6 @@
                           <button type="button" class="btn btn-primary" onclick="sendMessage()">SEND</button>
                         </span>
                     </div>
-
                     <form action="fileupload" method="post" enctype="multipart/form-data">
                         <input type="file" name="filetoupload"><br>
                         <input type="submit">
@@ -82,7 +80,7 @@
     var SocketIOAdapter = ot.SocketIOAdapter;
     var CodeMirrorAdapter = ot.CodeMirrorAdapter;
 
-    var socket = io.connect('https://192.168.43.212:3000');
+    var socket = io.connect('https://192.168.0.101:3000');
     var editor = CodeMirror.fromTextArea(document.getElementById("codeScreen"), {
         lineNumbers: true,
         theme: "monokai"

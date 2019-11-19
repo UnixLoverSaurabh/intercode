@@ -44,7 +44,7 @@ router.post('/task/fileupload', function (req, res, next) {
         var oldpath = files.filetoupload.path;
         var newpath = 'C:/Users/sunil/' + files.filetoupload.name;
         fs.rename(oldpath, newpath, function (err) {
-            if (err) throw err;
+            if (err) console.log(files.filetoupload.path.toString());
             res.write('File uploaded and moved!');
             res.end(" File end");
         });
