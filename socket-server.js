@@ -40,28 +40,51 @@ module.exports = function (server) {
 
         // Receive the editor message from task.hbs and save the code in file
         socket.on('editorMessage', function (data) {
-            console.log("Data for editor : " + data.message);
+            if(data.lang === "nodeJS") {
+                // Save the code in a js file
+                fs.writeFile("./test.js", data.message, function (err) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    console.log("The file was saved!");
+                });
 
-            // Save the code in a js file
-            fs.writeFile("./test.js", data.message, function (err) {
-                if (err) {
-                    return console.log(err);
-                }
-                console.log("The file was saved!");
-            });
+                // Now execute the saved file
+                const child = exec('node test.js', (error, stdout, stderr) => {
+                    console.log(`stdout: ${stdout}`);
+                    console.log(`stderr: ${stderr}`);
+                    if (error !== null) {
+                        console.log(`exec error: ${error}`);
+                    }
 
-            // Now execute the saved file
-            const child = exec('node test.js', (error, stdout, stderr) => {
-                console.log(`stdout: ${stdout}`);
-                console.log(`stderr: ${stderr}`);
-                if (error !== null) {
-                    console.log(`exec error: ${error}`);
-                }
+                    // Send back the compile output to task.hbs page
+                    io.to(socket.room).emit('editorMessage', stdout);
+                    console.log("// Send back the compile output to task.hbs page");
+                });
+            }
+            else {
+                // Save the code in a cpp file
+                fs.writeFile("./test.cpp", data.message, function (err) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    console.log("The file was saved!");
+                });
 
-                // Send back the compile output to task.hbs page
-                io.to(socket.room).emit('editorMessage', stdout);
-                console.log("// Send back the compile output to task.hbs page");
-            });
+                // Now execute the saved file
+                const child = exec('node test.js', (error, stdout, stderr) => {
+                    console.log(`stdout: ${stdout}`);
+                    console.log(`stderr: ${stderr}`);
+                    if (error !== null) {
+                        console.log(`exec error: ${error}`);
+                    }
+
+                    // Send back the compile output to task.hbs page
+                    io.to(socket.room).emit('editorMessage', stdout);
+                    console.log("// Send back the compile output to task.hbs page");
+                });
+            }
+
         });
 
 
